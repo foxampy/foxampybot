@@ -1,0 +1,138 @@
+# Project Cards / Карточки проектов
+
+Полный компонент карточек проектов из Project Hub с дизайном, анимациями и переходами.
+
+## 📁 Структура
+
+```
+project-cards/
+├── ProjectCards.tsx    # Основной React компонент
+├── ProjectCards.css    # Стили для карточек
+└── README.md           # Документация
+```
+
+## 🚀 Использование
+
+### 1. Импорт компонентов
+
+```tsx
+import { 
+  ProjectCard,      // Отдельная карточка проекта
+  ProjectsGrid,     // Сетка всех проектов
+  ProjectHub,       // Полная страница Hub
+  projects          // Данные проектов
+} from './project-cards/ProjectCards';
+```
+
+### 2. Подключение стилей
+
+```tsx
+import './project-cards/ProjectCards.css';
+```
+
+### 3. Использование компонентов
+
+#### Полная страница Hub:
+```tsx
+export default function Page() {
+  return <ProjectHub />;
+}
+```
+
+#### Сетка проектов:
+```tsx
+export default function Page() {
+  return (
+    <div className="my-page">
+      <h1>Мои проекты</h1>
+      <ProjectsGrid language="ru" />
+    </div>
+  );
+}
+```
+
+#### Отдельная карточка:
+```tsx
+export default function Page() {
+  const myProject = projects[0]; // Civilization Protocol
+  
+  return (
+    <ProjectCard 
+      project={myProject} 
+      index={0} 
+      language="ru" 
+    />
+  );
+}
+```
+
+## 📊 Данные проектов
+
+Все проекты содержат:
+
+| Поле | Описание |
+|------|----------|
+| `id` | Уникальный идентификатор |
+| `name` / `nameEn` | Название (RU/EN) |
+| `description` / `descriptionEn` | Описание (RU/EN) |
+| `url` | Внешняя ссылка на проект |
+| `status` | Статус: `active`, `pilot`, `beta`, `planning` |
+| `category` / `categoryEn` | Категория (RU/EN) |
+| `focus` | Массив технологий/тегов |
+| `stageLabel` | Метка стадии проекта |
+
+## 🎨 Доступные проекты
+
+1. **Civilization Protocol** - Блокчейн / Экосистема
+2. **TradePlus** - Финтех / Трейдинг
+3. **Dogymorbios** - Социальная сеть / Экосистема
+4. **EthoLife** - Здоровье / Интеграция
+
+## 🔘 Кнопки и переходы
+
+Каждая карточка содержит:
+
+- **Архитектура платформы** (только для Civilization Protocol) → `/projects/civilization-protocol`
+- **Инвестиционная презентация** → `/projects/{id}/presentation`
+- **Открыть проект** → внешняя ссылка на GitHub/сайт
+
+## 🎭 Стилизация
+
+### CSS-классы:
+
+```css
+.project-hub           /* Контейнер страницы */
+.project-hub-hero      /* Hero секция */
+.projects-grid         /* Сетка проектов */
+.project-card          /* Карточка проекта */
+.project-card-title    /* Заголовок */
+.project-card-status   /* Бейдж статуса */
+.project-card-tag      /* Тег технологии */
+.project-card-btn      /* Кнопка */
+```
+
+### CSS-переменные:
+
+```css
+:root {
+  --color-bg: #050505;
+  --color-accent: #22d3ee;
+  --color-status-active: #10b981;
+  --color-status-pilot: #f59e0b;
+  /* ... и др. */
+}
+```
+
+## ⚡ Зависимости
+
+```bash
+npm install framer-motion lucide-react
+```
+
+## 📝 Примечания
+
+- Компоненты используют **Tailwind CSS** классы (если доступен)
+- Файл `ProjectCards.css` содержит fallback стили
+- Поддержка русского и английского языков
+- Адаптивный дизайн (mobile-first)
+- Анимации через Framer Motion

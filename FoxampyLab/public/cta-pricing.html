@@ -1,0 +1,522 @@
+<!-- 
+  ПРОДАЮЩИЕ CTA БЛОКИ С ЦЕНАМИ
+  Можно вставить на любую страницу сайта
+-->
+
+<style>
+.cta-section {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #f0f0f5;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.cta-section .subtitle {
+  text-align: center;
+  color: #909098;
+  margin-bottom: 3rem;
+  font-size: 1.1rem;
+}
+
+/* ===== ПАКЕТЫ УСЛУГ ===== */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.pricing-card {
+  background: linear-gradient(145deg, #0a0a0a 0%, #121215 100%);
+  border: 1px solid #2a2a2e;
+  border-radius: 8px;
+  padding: 2rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+  border-color: #505050;
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.pricing-card.featured {
+  border-color: #606068;
+  background: linear-gradient(145deg, #0a0a0a 0%, #1a1a1c 100%);
+}
+
+.pricing-card.featured::before {
+  content: '★ POPULAR';
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: #c0c0c8;
+  color: #030303;
+  padding: 4px 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.pricing-card h3 {
+  font-size: 1.3rem;
+  color: #f0f0f5;
+  margin-bottom: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.pricing-card .price {
+  font-size: 2.5rem;
+  color: #f0f0f5;
+  font-weight: 300;
+  margin: 1rem 0;
+}
+
+.pricing-card .price span {
+  font-size: 1rem;
+  color: #606068;
+}
+
+.pricing-card .description {
+  color: #909098;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.pricing-card .timeline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #606068;
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #1a1a1c;
+}
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+}
+
+.pricing-card li {
+  padding: 0.5rem 0;
+  color: #c0c0c8;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.pricing-card li::before {
+  content: '→';
+  color: #606068;
+}
+
+.cta-button {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: transparent;
+  border: 1px solid #606068;
+  color: #f0f0f5;
+  text-align: center;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.cta-button:hover {
+  background: #f0f0f5;
+  color: #030303;
+  border-color: #f0f0f5;
+}
+
+.cta-button.primary {
+  background: #f0f0f5;
+  color: #030303;
+  border-color: #f0f0f5;
+}
+
+.cta-button.primary:hover {
+  background: transparent;
+  color: #f0f0f5;
+}
+
+/* ===== СУПЕР ПРЕДЛОЖЕНИЯ ===== */
+.super-offers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 4rem 0;
+}
+
+.offer-card {
+  background: #0a0a0a;
+  border: 1px solid #2a2a2e;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.offer-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #606068, transparent);
+}
+
+.offer-card h4 {
+  color: #f0f0f5;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.offer-card .super-price {
+  font-size: 2rem;
+  color: #f0f0f5;
+  margin: 0.5rem 0;
+}
+
+.offer-card .super-price .old {
+  font-size: 1rem;
+  color: #606068;
+  text-decoration: line-through;
+  margin-right: 0.5rem;
+}
+
+.offer-card p {
+  color: #909098;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.offer-card .badge {
+  display: inline-block;
+  background: #1a1a1c;
+  color: #909098;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  margin-right: 0.5rem;
+}
+
+/* ===== ГАРАНТИИ И ПРЕИМУЩЕСТВА ===== */
+.trust-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 3rem;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1c;
+  margin: 4rem 0;
+}
+
+.trust-item {
+  text-align: center;
+}
+
+.trust-item .icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.trust-item h4 {
+  color: #f0f0f5;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.trust-item p {
+  color: #606068;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* ===== БЫСТРЫЙ СТАРТ ===== */
+.quick-start {
+  background: linear-gradient(135deg, #121215 0%, #0a0a0a 100%);
+  border: 1px solid #2a2a2e;
+  padding: 3rem;
+  text-align: center;
+  margin: 4rem 0;
+}
+
+.quick-start h3 {
+  font-size: 1.8rem;
+  color: #f0f0f5;
+  margin-bottom: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.quick-start p {
+  color: #909098;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.quick-start-steps {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+
+.step {
+  text-align: center;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #606068;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #f0f0f5;
+  margin: 0 auto 1rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.step p {
+  color: #c0c0c8;
+  font-size: 0.85rem;
+  margin: 0;
+}
+</style>
+
+<!-- ===== ОСНОВНЫЕ ПАКЕТЫ ===== -->
+<section class="cta-section">
+  <h2>УСЛУГИ И ЦЕНЫ</h2>
+  <p class="subtitle">Прозрачное ценообразование без скрытых платежей</p>
+  
+  <div class="pricing-grid">
+    <!-- MVP Быстрый старт -->
+    <div class="pricing-card">
+      <h3>MVP БЫСТРЫЙ СТАРТ</h3>
+      <div class="price">$8,000<span> / проект</span></div>
+      <p class="description">
+        Идеально для тестирования гипотезы. Работающий прототип с базовым функционалом.
+      </p>
+      <div class="timeline">⏱ Срок: 4-6 недель</div>
+      <ul>
+        <li>Product Discovery (3-5 дней)</li>
+        <li>UX/UI дизайн (Wireframes + Mockups)</li>
+        <li>Разработка фронтенда (React/Next.js)</li>
+        <li>Базовый бэкенд (API, БД)</li>
+        <li>Развертывание (Vercel/Netlify)</li>
+        <li>1 неделя поддержки после запуска</li>
+      </ul>
+      <a href="#contact" class="cta-button">ОБСУДИТЬ ПРОЕКТ</a>
+    </div>
+    
+    <!-- Полный цикл (Featured) -->
+    <div class="pricing-card featured">
+      <h3>ПОЛНЫЙ ЦИКЛ</h3>
+      <div class="price">$15,000<span> / проект</span></div>
+      <p class="description">
+        Комплексная разработка от идеи до запуска. Для стартапов и новых продуктов.
+      </p>
+      <div class="timeline">⏱ Срок: 10-14 недель</div>
+      <ul>
+        <li>Глубокое исследование рынка и аудитории</li>
+        <li>Продуктовая стратегия и roadmap</li>
+        <li>Полный UX/UI дизайн + прототипы</li>
+        <li>Фронтенд + бэкенд + мобильное приложение</li>
+        <li>Интеграции (оплата, аналитика, CRM)</li>
+        <li>Тестирование и QA</li>
+        <li>Запуск и первые пользователи</li>
+        <li>1 месяц поддержки после запуска</li>
+      </ul>
+      <a href="#contact" class="cta-button primary">НАЧАТЬ ПРОЕКТ</a>
+    </div>
+    
+    <!-- Web3 / Blockchain -->
+    <div class="pricing-card">
+      <h3>WEB3 / BLOCKCHAIN</h3>
+      <div class="price">$25,000<span> / проект</span></div>
+      <p class="description">
+        Смарт-контракты, токеномика, DeFi. Специализация с победой на хакатоне.
+      </p>
+      <div class="timeline">⏱ Срок: 8-12 недель</div>
+      <ul>
+        <li>Аудит бизнес-модели для Web3</li>
+        <li>Разработка токеномики</li>
+        <li>Smart contracts (Solidity/Rust)</li>
+        <li>dApp фронтенд (Web3 интеграция)</li>
+        <li>Аудит безопасности</li>
+        <li>Запуск в mainnet</li>
+        <li>Документация и Whitepaper</li>
+      </ul>
+      <a href="#contact" class="cta-button">ОБСУДИТЬ WEB3</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== СУПЕР ПРЕДЛОЖЕНИЯ ===== -->
+<section class="cta-section">
+  <h2>СУПЕР ЦЕНЫ НА КОМПЛЕКС</h2>
+  <p class="subtitle">Экономия до 30% при заказе комплексных решений</p>
+  
+  <div class="super-offers">
+    <div class="offer-card">
+      <span class="badge">-25%</span>
+      <h4>ECOSYSTEM LAUNCH</h4>
+      <div class="super-price">
+        <span class="old">$35,000</span>$25,000
+      </div>
+      <p>
+        Web + Mobile + Admin + API + Blockchain интеграция
+      </p>
+      <a href="#contact" class="cta-button">ПОДРОБНЕЕ</a>
+    </div>
+    
+    <div class="offer-card">
+      <span class="badge">-30%</span>
+      <h4>PROPTECH SOLUTION</h4>
+      <div class="super-price">
+        <span class="old">$30,000</span>$21,000
+      </div>
+      <p>
+        Платформа недвижимости с цифровым реестром и аналитикой
+      </p>
+      <a href="#contact" class="cta-button">ПОДРОБНЕЕ</a>
+    </div>
+    
+    <div class="offer-card">
+      <span class="badge">-20%</span>
+      <h4>RETENTION MONTH</h4>
+      <div class="super-price">$8,000<span style="font-size:0.8rem">/мес</span></div>
+      <p>
+        Разработка + маркетинг + поддержка (мин. 3 мес)
+      </p>
+      <a href="#contact" class="cta-button">ПОДРОБНЕЕ</a>
+    </div>
+    
+    <div class="offer-card">
+      <span class="badge">HOT</span>
+      <h4>URGENT DELIVERY</h4>
+      <div class="super-price">+40%</div>
+      <p>
+        MVP за 2 недели (двойная команда, работа 24/7)
+      </p>
+      <a href="#contact" class="cta-button">СРОЧНО</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ГАРАНТИИ ===== -->
+<section class="trust-section">
+  <div class="trust-item">
+    <div class="icon">⚡</div>
+    <h4>БЫСТРЫЙ СТАРТ</h4>
+    <p>Начинаем работу в течение 48 часов после подписания договора</p>
+  </div>
+  <div class="trust-item">
+    <div class="icon">📊</div>
+    <h4>ПРОЗРАЧНЫЙ ПРОЦЕСС</h4>
+    <p>Еженедельные отчеты, доступ к таск-трекеру, регулярные созвоны</p>
+  </div>
+  <div class="trust-item">
+    <div class="icon">💬</div>
+    <h4>ПОСТОЯННАЯ СВЯЗЬ</h4>
+    <p>Telegram/Slack с ответом в течение 2 часов в рабочее время</p>
+  </div>
+  <div class="trust-item">
+    <div class="icon">🎯</div>
+    <h4>ИНДИВИДУАЛЬНЫЙ ПОДХОД</h4>
+    <p>Нет шаблонных решений. Каждый проект уникален и подстроен под ваши цели</p>
+  </div>
+</section>
+
+<!-- ===== БЫСТРЫЙ СТАРТ ===== -->
+<section class="quick-start">
+  <h3>КАК МЫ РАБОТАЕМ</h3>
+  <p>
+    От первого контакта до запуска — четкий, предсказуемый процесс. 
+    Вы всегда знаете, на каком этапе проект и что будет дальше.
+  </p>
+  
+  <div class="quick-start-steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <p><strong>Бесплатная консультация</strong><br>30 минут, разбираем задачу</p>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <p><strong>Предложение за 48ч</strong><br>Оценка, сроки, команда</p>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <p><strong>Старт через 2 дня</strong><br>Договор, предоплата, работа</p>
+    </div>
+    <div class="step">
+      <div class="step-number">4</div>
+      <p><strong>Запуск + поддержка</strong><br>Передача, обучение, гарантии</p>
+    </div>
+  </div>
+  
+  <a href="#contact" class="cta-button primary" style="max-width: 300px; margin: 0 auto;">
+    ЗАПИСАТЬСЯ НА КОНСУЛЬТАЦИЮ
+  </a>
+</section>
+
+<!-- ===== ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ ===== -->
+<section class="cta-section">
+  <h2>ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ</h2>
+  
+  <div class="super-offers">
+    <div class="offer-card">
+      <h4>PRODUCT AUDIT</h4>
+      <div class="super-price">$1,500</div>
+      <p>
+        Анализ вашего продукта: UX, архитектура, метрики. Отчет с рекомендациями.
+      </p>
+    </div>
+    
+    <div class="offer-card">
+      <h4>TECHNICAL DUE DILIGENCE</h4>
+      <div class="super-price">$3,000</div>
+      <p>
+        Аудит кода и архитектуры перед инвестицией или покупкой компании.
+      </p>
+    </div>
+    
+    <div class="offer-card">
+      <h4>WEB3 CONSULTING</h4>
+      <div class="super-price">$500<span style="font-size:0.8rem">/час</span></div>
+      <p>
+        Консультации по токеномике, смарт-контрактам, DeFi стратегии.
+      </p>
+    </div>
+    
+    <div class="offer-card">
+      <h4>TEAM AS A SERVICE</h4>
+      <div class="super-price">$6,000<span style="font-size:0.8rem">/мес</span></div>
+      <p>
+        Выделенная команда под ваш проект. 80 часов в месяц.
+      </p>
+    </div>
+  </div>
+</section>
