@@ -1,312 +1,317 @@
-# 🤖 FoxampyBot - Telegram SaaS Bot Builder
+# 🤖 Telegram SaaS Bot Builder
 
-**Telegram-бот + Mini App для создания кастомных ботов без программирования**
+**Telegram-бот + Mini App для создания и продажи кастомных ботов**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/foxampy/foxampybot&root-directory=TelegramBot)
-[![Supabase](https://img.shields.io/badge/Database-Supabase-green)](https://supabase.com)
-[![Telegram Bot](https://img.shields.io/badge/Platform-Telegram-blue)](https://t.me/foxampybot)
+## 📋 Описание
 
----
+Платформа позволяет пользователям за 5-10 минут собрать своего Telegram-бота без навыков программирования через геймифицированную воронку продаж.
+
+### 🎯 Целевая аудитория
+- Малый бизнес
+- Соло-предприниматели
+- Услуги (косметологи, массажисты, мастера)
+- Инфобизнес
+
+### ✨ Основные возможности
+
+#### Telegram Бот
+- 🎯 Воронка onboarding с вау-эффектом
+- 🛠 Конструктор ботов из готовых функций
+- 💰 Каталог функций с ценами
+- 📊 Админ-панель с аналитикой
+- 🔔 Уведомления админу о новых пользователях
+- 👥 Просмотр всех пользователей с username
+
+#### Telegram Mini App
+- 🎨 Стильный dark theme интерфейс
+- 📱 Адаптивный дизайн для мобильных
+- 🎮 Геймификация сборки
+- 📊 Dashboard с метриками
+- 🛒 Выбор функций и тарифов
+
+## 🏗 Архитектура
+
+```
+TelegramBot/
+├── bot/                    # Основной код бота
+│   ├── index.ts           # Бот с polling
+│   └── server.ts          # Бот с webhook + Express
+├── config/                 # Конфигурация
+│   ├── index.ts           # Основные настройки
+│   └── webhook.ts         # Настройка webhook
+├── database/               # База данных
+│   ├── index.ts           # Подключение к PostgreSQL
+│   ├── migrate.ts         # Миграции
+│   └── models/            # Модели данных
+│       ├── UserModel.ts
+│       └── EventModel.ts
+├── handlers/               # Обработчики
+│   ├── commands.ts        # Команды (/start, /admin, etc.)
+│   ├── callbacks.ts       # Callback query
+│   └── messages.ts        # Текстовые сообщения
+├── keyboards/              # Клавиатуры
+│   └── index.ts           # Inline и Reply клавиатуры
+├── mini-app/               # Telegram Mini App
+│   └── src/
+│       ├── App.tsx        # Основное приложение
+│       ├── main.tsx       # Точка входа
+│       └── styles/        # Стили
+└── utils/                  # Утилиты
+```
 
 ## 🚀 Быстрый старт
 
-### 1. Настроить Supabase (БД)
+### 1. Установка зависимостей
 
 ```bash
-# 1. Перейдите на https://supabase.com
-# 2. Создайте новый проект
-# 3. Settings → API → скопируйте ключи
-# 4. SQL Editor → выполните TelegramBot/database/supabase-migration.sql
+cd TelegramBot
+npm install
+
+cd mini-app
+npm install
 ```
 
-### 2. Настроить Vercel
+### 2. Настройка переменных окружения
 
-```bash
-# 1. Перейдите на https://vercel.com/new
-# 2. Import: foxampy/foxampybot
-# 3. Root Directory: TelegramBot
-# 4. Добавьте переменные окружения (см. ниже)
-# 5. Deploy
-```
-
-### 3. Переменные окружения
-
-Добавьте в Vercel (Settings → Environment Variables):
+Скопируйте `.env.example` в `.env` и заполните:
 
 ```env
-# Supabase (из Settings → API)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-
-# Telegram
 BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
 ADMIN_ID=268494758
 
-# Server
-SERVER_URL=https://your-project.vercel.app
-MINI_APP_URL=https://your-project.vercel.app
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/telegram_bot_builder
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=telegram_bot_builder
+DB_USER=postgres
+DB_PASSWORD=postgres
 
-# Environment
-NODE_ENV=production
+SERVER_PORT=3000
+SERVER_URL=https://your-domain.com
+MINI_APP_URL=https://your-domain.com/mini-app
 ```
 
-### 4. Настроить Webhook
+### 3. Настройка базы данных
 
 ```bash
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://your-project.vercel.app/webhook"
+# Создайте базу данных
+createdb telegram_bot_builder
+
+# Примените миграции
+npm run db:migrate
 ```
 
-### 5. Настроить Mini App
+### 4. Запуск бота
 
-В @BotFather:
-- `/mybots` → Bot Settings → Menu Button
-- URL: `https://your-project.vercel.app`
-- Название: `🎨 Конструктор`
-
----
-
-## 📁 Структура проекта
-
-```
-foxampybot/
-├── TelegramBot/              # Основной код бота и Mini App
-│   ├── api/                  # Vercel Serverless функции
-│   ├── bot/                  # Код бота
-│   ├── config/               # Конфигурация
-│   ├── database/             # БД модели и миграции
-│   ├── handlers/             # Обработчики команд
-│   ├── keyboards/            # Клавиатуры
-│   ├── mini-app/             # React Mini App
-│   ├── scripts/              # Скрипты
-│   ├── utils/                # Утилиты
-│   ├── .env.example          # Шаблон переменных
-│   ├── package.json
-│   └── vercel.json           # Vercel конфиг
-├── FoxampyLab/               # Другие проекты
-├── lib/                      # Библиотеки
-└── project-cards/            # Компоненты
+#### Режим разработки (polling):
+```bash
+npm run dev
 ```
 
----
+#### Продакшен режим (webhook):
+```bash
+# Сборка
+npm run build
 
-## 🎯 Возможности
+# Запуск сервера
+node dist/bot/server.js
 
-### Telegram Бот
-- ✅ Воронка onboarding
-- ✅ Конструктор ботов
-- ✅ Каталог функций (6 модулей)
-- ✅ Админ-панель
-- ✅ Уведомления о новых пользователях
-- ✅ Просмотр пользователей с username
+# Настройка webhook
+npm run setup:webhook
+```
 
-### Telegram Mini App
-- ✅ React + Vite
-- ✅ Dark theme дизайн
-- ✅ Визуальный конструктор
-- ✅ Выбор функций и тарифов
-- ✅ Dashboard с метриками
-- ✅ Мультиязычность (RU/EN)
+### 5. Запуск Mini App
 
-### База данных (Supabase)
-- ✅ PostgreSQL
-- ✅ Таблицы: users, events, bot_projects, subscriptions
-- ✅ RLS политики
-- ✅ Автоматические миграции
+```bash
+cd mini-app
+npm run dev
+```
 
----
+## 📦 Доступные функции
 
-## 💰 Монетизация
+| Функция | Цена/мес | Описание |
+|---------|----------|----------|
+| 📝 Сбор заявок | $5 | Сбор контактных данных и заявок |
+| 💬 Автоответы (FAQ) | $5 | Автоматические ответы на вопросы |
+| 📅 Запись клиентов | $7 | Онлайн-запись на услуги |
+| 📊 Google Sheets | $3 | Сохранение в таблицы |
+| 🔔 Уведомления | $3 | Мгновенные уведомления |
+| 💳 Приём оплаты | $10 | Платежи через Telegram/Stripe |
 
-| Тариф | Цена | Возможности |
-|-------|------|-------------|
-| Free | $0/мес | 1 бот, 2 функции, 100 лидов |
-| Basic | $10/мес | 3 бота, 5 функций, 1000 лидов |
-| Pro | $25/мес | ∞ ботов, ∞ функций, ∞ лидов |
+## 💰 Тарифы
 
-### Функции
-- 📝 Сбор заявок - $5/мес
-- 💬 Автоответы (FAQ) - $5/мес
-- 📅 Запись клиентов - $7/мес
-- 📊 Google Sheets - $3/мес
-- 🔔 Уведомления - $3/мес
-- 💳 Приём оплаты - $10/мес
+### Free - $0/мес
+- 1 бот
+- 2 функции
+- 100 лидов/мес
+- Базовая поддержка
 
----
+### Basic - $10/мес
+- 3 бота
+- 5 функций
+- 1000 лидов/мес
+- Приоритетная поддержка
+
+### Pro - $25/мес
+- ∞ ботов
+- ∞ функций
+- ∞ лидов
+- VIP поддержка
+- API доступ
+
+## 👑 Админ-панель
+
+### Команда /admin
+Доступна только администратору (ADMIN_ID):
+
+- 👥 **Все пользователи** - просмотр всех пользователей с username
+- 🆕 **Новые пользователи** - пользователи за последние 24 часа
+- 📊 **Статистика** - общая статистика бота
+- 📁 **Проекты** - управление проектами
+
+### Уведомления
+Бот автоматически отправляет уведомление админу при входе нового пользователя:
+- Telegram ID
+- Username (с ссылкой на профиль)
+- Имя
+- Время входа
+
+## 🎨 Дизайн
+
+Стиль заимствован из проекта Foxampy:
+- 🌙 Dark theme
+- 💙 Neon cyan акценты (#22d3ee)
+- 🔤 Monospace шрифты
+- 🎮 Pixel art эстетика
+- ✨ Glassmorphism эффекты
+
+## 📊 База данных
+
+### Таблицы
+- `users` - пользователи Telegram
+- `bot_projects` - проекты ботов
+- `selected_features` - выбранные функции
+- `subscriptions` - подписки
+- `leads` - заявки от ботов
+- `events` - события аналитики
+
+## 🔧 Скрипты
+
+```bash
+# Запуск в режиме разработки
+npm run dev
+
+# Сборка проекта
+npm run build
+
+# Запуск продакшен версии
+npm run start
+
+# Запуск Mini App
+npm run dev:mini-app
+
+# Сборка Mini App
+npm run build:mini-app
+
+# Настройка webhook
+npm run setup:webhook
+
+# Миграция БД
+npm run db:migrate
+```
+
+## 🌐 Деплой
+
+### Варианты хостинга
+- **Oracle Cloud Always Free** - бесплатный VPS
+- **Fly.io** - бесплатный тариф
+- **Railway** - простой деплой
+- **Heroku** - классический вариант
+
+### Требования
+- Node.js 18+
+- PostgreSQL
+- HTTPS для webhook
+
+### Настройка webhook
+
+1. Задеплойте приложение
+2. Обновите `SERVER_URL` в `.env`
+3. Выполните:
+```bash
+npm run setup:webhook
+```
+
+## 📱 Telegram Mini App
+
+### Интеграция с ботом
+
+Добавьте кнопку для открытия Mini App:
+
+```typescript
+bot.sendMessage(chatId, 'Открыть конструктор:', {
+  reply_markup: {
+    inline_keyboard: [[
+      { text: '🚀 Открыть Mini App', web_app: { url: config.miniApp.url } }
+    ]]
+  }
+});
+```
+
+### Возможности Mini App
+- 🎯 Выбор функций бота
+- 💰 Расчет стоимости
+- 📊 Dashboard с метриками
+- ⚙️ Настройки профиля
+- 🌐 Мультиязычность (RU/EN)
+
+## 🔐 Безопасность
+
+- ✅ Валидация данных от Telegram
+- ✅ Проверка прав администратора
+- ✅ Защита от SQL инъекций
+- ✅ Rate limiting (рекомендуется добавить)
+
+## 📈 Аналитика
+
+Отслеживаемые события:
+- Вход в бота (/start)
+- Нажатия кнопок (callback_query)
+- Выбор функций
+- Оплата подписки
+- Конверсия воронки
 
 ## 🛠 Технологии
 
 ### Backend
-- **Node.js** + **TypeScript**
-- **Telegraf** / node-telegram-bot-api
-- **Supabase** (PostgreSQL)
-- **Vercel** (Serverless)
+- Node.js + TypeScript
+- node-telegram-bot-api
+- PostgreSQL + pg
+- Express (для webhook)
 
 ### Frontend (Mini App)
-- **React 18** + **TypeScript**
-- **Vite**
-- **Framer Motion**
-- **Lucide React** (иконки)
-- **Telegram WebApp API**
-
----
-
-## 📚 Документация
-
-| Файл | Описание |
-|------|----------|
-| [`TelegramBot/CHEATSHEET.md`](TelegramBot/CHEATSHEET.md) | Быстрая шпаргалка |
-| [`TelegramBot/SETUP-FULL.md`](TelegramBot/SETUP-FULL.md) | Полная инструкция |
-| [`TelegramBot/DEPLOY-GITHUB.md`](TelegramBot/DEPLOY-GITHUB.md) | Деплой на Vercel |
-
----
-
-## 🔐 Безопасность
-
-- ✅ `.env` файлы в `.gitignore`
-- ✅ Service Role Key только на сервере
-- ✅ RLS политики в Supabase
-- ✅ Проверка ADMIN_ID в API
-- ✅ HTTPS (Vercel)
-
----
-
-## 🔄 Разработка
-
-### Локальный запуск
-
-```bash
-cd TelegramBot
-
-# Установите зависимости
-npm install
-
-# Скопируйте .env.example в .env.local
-copy .env.example .env.local
-
-# Заполните .env.local (см. CHEATSHEET.md)
-
-# Запустите бота
-npm run dev
-
-# В другом терминале - Mini App
-cd mini-app
-npm install
-npm run dev
-```
-
-### Применение миграций БД
-
-```bash
-# Автоматически
-npm run db:migrate
-
-# Или вручную через Supabase SQL Editor
-# database/supabase-migration.sql
-```
-
-### Деплой
-
-```bash
-# Push в GitHub (авто-деплой)
-git push
-
-# Или вручную
-vercel --prod
-```
-
----
-
-## 📊 API Endpoints
-
-После деплоя доступны API endpoints (только для админа):
-
-| Endpoint | Описание |
-|----------|----------|
-| `GET /api/users?telegramId=ID` | Все пользователи |
-| `GET /api/users/new?telegramId=ID` | Новые (24ч) |
-| `GET /api/stats?telegramId=ID` | Статистика |
-| `GET /api/events/USER_ID?telegramId=ID` | События |
-| `GET /health` | Health check |
-
----
-
-## 👑 Админ-панель
-
-Команды в боте:
-
-- `/start` - Приветствие + главное меню
-- `/admin` - Админ-панель (только ADMIN_ID=268494758)
-- `/help` - Справка
-- `/profile` - Профиль пользователя
-
-### Админ возможности:
-- 👥 Просмотр всех пользователей
-- 🆕 Новые пользователи (24ч)
-- 📊 Статистика бота
-- 📁 История действий пользователя
-
----
-
-## 🌐 Деплой
-
-### Vercel (рекомендуется)
-
-```bash
-npm install -g vercel
-vercel login
-vercel --prod
-```
-
-### Переменные для Vercel:
-
-```
-SUPABASE_URL=...
-SUPABASE_ANON_KEY=...
-SUPABASE_SERVICE_ROLE_KEY=...
-BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
-ADMIN_ID=268494758
-SERVER_URL=https://your-project.vercel.app
-MINI_APP_URL=https://your-project.vercel.app
-```
-
----
-
-## 🆘 Поддержка
-
-### Проблемы?
-
-1. **Бот не отвечает:**
-   ```bash
-   vercel logs --prod
-   ```
-
-2. **БД не подключается:**
-   - Проверьте ключи в Supabase Dashboard
-   - Убедитесь, что миграции применены
-
-3. **Webhook не работает:**
-   ```bash
-   curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
-   ```
-
----
+- React 18
+- TypeScript
+- Vite
+- Framer Motion
+- Lucide React (иконки)
 
 ## 📝 License
 
 MIT
 
----
-
 ## 👨‍💻 Автор
 
-**Foxampy**
-
-- GitHub: [@foxampy](https://github.com/foxampy)
-- Telegram: [@foxampybot](https://t.me/foxampybot)
+Foxampy Portfolio
 
 ---
 
-**Готово к использованию! 🎉**
+**Готово к использованию! 🚀**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/foxampy/foxampybot&root-directory=TelegramBot)
+Для запуска:
+```bash
+npm install
+npm run dev
+```
+
+Для открытия бота: https://t.me/your_bot_name

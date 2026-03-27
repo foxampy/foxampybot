@@ -1,16 +1,19 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { UserModel } from '../database/models/UserModel';
 import { EventModel } from '../database/models/EventModel';
+import { ServiceModel, OrderModel, AppointmentModel } from '../database/models/ServiceModel';
 import config from '../config';
-import { 
-  mainMenuKeyboard, 
-  adminKeyboard, 
-  userActionsKeyboard,
-  mainMenuWithMiniAppKeyboard,
+import {
+  mainMenuKeyboard,
+  adminKeyboard,
+  servicesKeyboard,
+  portfolioKeyboard,
+  accountKeyboard,
+  createCalendarKeyboard,
+  createTimeSlotsKeyboard,
 } from '../keyboards';
 
 const { adminId } = config.bot;
-const { miniApp } = config;
 
 // Обработка команды /start
 export async function handleStart(bot: TelegramBot, msg: TelegramBot.Message) {
@@ -30,9 +33,9 @@ export async function handleStart(bot: TelegramBot, msg: TelegramBot.Message) {
   });
 
   // Записываем событие входа
-  await EventModel.create(user.id, 'start_command', { 
+  await EventModel.create(user.id, 'start_command', {
     username: user.username,
-    chat_id: chatId 
+    chat_id: chatId
   });
 
   // Проверяем, новый ли это пользователь
@@ -44,23 +47,21 @@ export async function handleStart(bot: TelegramBot, msg: TelegramBot.Message) {
   }
 
   // Приветственное сообщение
-  const welcomeMessage = isNewUser 
+  const welcomeMessage = isNewUser
     ? `👋 *Привет, ${user.first_name || 'друг'}!*
 
-🎉 *Добро пожаловать в Telegram SaaS Bot Builder!*
+🎉 *Добро пожаловать в Foxampy Bot Builder!*
 
-✨ *Создайте своего бота за 5-10 минут без навыков программирования!*
+✨ *Создаем цифровые решения для бизнеса:*
+🤖 Telegram боты
+📱 Мобильные приложения
+🌐 Веб-сайты
+⚙️ CRM системы
 
-🚀 *Что вы можете сделать:*
-• Собрать бота из готовых функций
-• Настроить сбор заявок 24/7
-• Автоматизировать общение с клиентами
-• Принимать оплаты через бота
-
-💡 *Нажмите "🚀 Собрать бота" чтобы начать!*`
+🚀 *Выберите услугу в меню или запишитесь на консультацию!*`
     : `👋 *С возвращением, ${user.first_name || 'друг'}!*
 
-🎯 *Чем займёмся сегодня?*`;
+🎯 *Чем могу помочь сегодня?*`;
 
   // Если это админ - показываем админ меню
   if (user.id === adminId) {
@@ -73,7 +74,7 @@ export async function handleStart(bot: TelegramBot, msg: TelegramBot.Message) {
 
   await bot.sendMessage(chatId, welcomeMessage, {
     parse_mode: 'Markdown',
-    reply_markup: mainMenuWithMiniAppKeyboard,
+    reply_markup: mainMenuKeyboard,
   });
 }
 
@@ -86,7 +87,6 @@ async function notifyAdminAboutNewUser(bot: TelegramBot, user: TelegramBot.User)
 • Username: ${user.username ? `@${user.username}` : 'нет'}
 • Имя: ${user.first_name || ''} ${user.last_name || ''}
 • Язык: ${user.language_code || 'ru'}
-• Бот: ${user.is_bot ? 'да' : 'нет'}
 
 ⏰ *Время:* ${new Date().toLocaleString('ru-RU')}`;
 
@@ -123,7 +123,8 @@ export async function handleAdmin(bot: TelegramBot, msg: TelegramBot.Message) {
 • Просмотр всех пользователей
 • Просмотр новых пользователей
 • Статистика бота
-• Управление проектами
+• Управление заказами
+• Просмотр записей
 
 Выберите действие:`;
 
@@ -146,30 +147,90 @@ export async function handleHelp(bot: TelegramBot, msg: TelegramBot.Message) {
 
 📚 *Как это работает:*
 
-1️⃣ *Нажмите "🚀 Собрать бота"*
-2️⃣ *Выберите нужные функции*
-3️⃣ *Настройте параметры*
-4️⃣ *Оплатите подписку*
-5️⃣ *Пользуйтесь готовым ботом!*
+1️⃣ *Выберите услугу в меню*
+2️⃣ *Ознакомьтесь с условиями*
+3️⃣ *Оставьте заявку или запишитесь на консультацию*
+4️⃣ *Мы свяжемся с вами для обсуждения деталей*
 
-🛠 *Доступные функции:*
-• Сбор заявок - $5/мес
-• Автоответы (FAQ) - $5/мес
-• Запись клиентов - $7/мес
-• Google Sheets - $3/мес
-• Уведомления - $3/мес
-• Приём оплаты - $10/мес
+🛠 *Наши услуги:*
+• Telegram боты - от $100
+• Мобильные приложения - от $2000
+• Веб-сайты - от $300
+• CRM системы - от $1500
+• Консультация - $100/час
 
 💬 *Нужна помощь?*
-Напишите в поддержку: @your_support`;
+Напишите в поддержку: @foxampy_support`;
 
   await bot.sendMessage(chatId, helpMessage, {
     parse_mode: 'Markdown',
   });
 }
 
-// Обработка команды /profile
-export async function handleProfile(bot: TelegramBot, msg: TelegramBot.Message) {
+// Обработка команды /services
+export async function handleServices(bot: TelegramBot, msg: TelegramBot.Message) {
+  const chatId = msg.chat.id;
+  const user = msg.from;
+
+  if (!user) return;
+
+  await EventModel.create(user.id, 'services_command', {});
+
+  const servicesMessage = `📋 *Наши услуги*
+
+Выберите категорию для просмотра деталей:
+
+🤖 *Telegram боты*
+От $100 до $1500
+Срок: 3-14 дней
+
+📱 *Мобильные приложения*
+От $2000 до $10000
+Срок: 30-60 дней
+
+🌐 *Веб-сайты*
+От $300 до $5000
+Срок: 5-30 дней
+
+⚙️ *CRM системы*
+От $1500 до $8000
+Срок: 30-45 дней`;
+
+  await bot.sendMessage(chatId, servicesMessage, {
+    parse_mode: 'Markdown',
+    reply_markup: servicesKeyboard,
+  });
+}
+
+// Обработка команды /portfolio
+export async function handlePortfolio(bot: TelegramBot, msg: TelegramBot.Message) {
+  const chatId = msg.chat.id;
+  const user = msg.from;
+
+  if (!user) return;
+
+  await EventModel.create(user.id, 'portfolio_command', {});
+
+  const portfolioMessage = `📖 *Наше портфолио*
+
+Выберите категорию для просмотра работ:
+
+⭐ *Реализованные проекты:*
+• Civilization Protocol - блокчейн платформа
+• Dogymorbios - социальная сеть для собак
+• TradePlus - торговая платформа
+• EthoLife - экосистема здоровья
+
+И многие другие!`;
+
+  await bot.sendMessage(chatId, portfolioMessage, {
+    parse_mode: 'Markdown',
+    reply_markup: portfolioKeyboard,
+  });
+}
+
+// Обработка команды /account
+export async function handleAccount(bot: TelegramBot, msg: TelegramBot.Message) {
   const chatId = msg.chat.id;
   const user = msg.from;
 
@@ -182,20 +243,26 @@ export async function handleProfile(bot: TelegramBot, msg: TelegramBot.Message) 
     return;
   }
 
-  const profileMessage = `👤 *Ваш профиль*
+  // Получаем статистику
+  const orders = await OrderModel.findByUser(user.id);
+  const appointments = await AppointmentModel.findByUser(user.id);
+
+  const accountMessage = `👤 *Ваш аккаунт*
 
 📋 *Информация:*
 • ID: \`${user.id}\`
 • Username: ${user.username ? `@${user.username}` : 'нет'}
 • Имя: ${user.first_name || ''}
-• Язык: ${dbUser.language_code}
-• Статус: ${dbUser.state}
+
+📊 *Статистика:*
+• Заказов: ${orders.length}
+• Записей: ${appointments.length}
 
 📅 *Дата регистрации:* ${new Date(dbUser.created_at).toLocaleDateString('ru-RU')}
 🕐 *Последний вход:* ${new Date(dbUser.last_seen).toLocaleString('ru-RU')}`;
 
-  await bot.sendMessage(chatId, profileMessage, {
+  await bot.sendMessage(chatId, accountMessage, {
     parse_mode: 'Markdown',
-    reply_markup: profileKeyboard,
+    reply_markup: accountKeyboard,
   });
 }
