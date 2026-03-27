@@ -1,14 +1,17 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { UserModel } from '../database/models/UserModel';
 import { EventModel } from '../database/models/EventModel';
+import { ServiceModel, OrderModel, AppointmentModel } from '../database/models/ServiceModel';
 import config from '../config';
-import { 
+import {
   mainMenuKeyboard,
-  botBuilderKeyboard,
-  pricingKeyboard,
+  servicesKeyboard,
+  telegramBotServicesKeyboard,
+  portfolioKeyboard,
+  accountKeyboard,
+  createCalendarKeyboard,
+  createTimeSlotsKeyboard,
 } from '../keyboards';
-
-const { miniApp } = config;
 
 // Обработка текстовых сообщений
 export async function handleTextMessage(bot: TelegramBot, msg: TelegramBot.Message) {
@@ -23,9 +26,141 @@ export async function handleTextMessage(bot: TelegramBot, msg: TelegramBot.Messa
 
   // Обработка команд меню
   switch (text) {
+    case '📋 Услуги и цены':
+      const servicesMessage = `📋 *Наши услуги и цены*
+
+Выберите категорию для подробностей:
+
+🤖 *Telegram боты* - от $100 до $1500
+📱 *Мобильные приложения* - от $2000 до $10000
+🌐 *Веб-сайты* - от $300 до $5000
+⚙️ *CRM системы* - от $1500 до $8000
+
+💼 *Также доступны:*
+• Консультация - $100/час
+• Техническая поддержка - от $50/мес`;
+
+      await bot.sendMessage(chatId, servicesMessage, {
+        parse_mode: 'Markdown',
+        reply_markup: servicesKeyboard,
+      });
+      break;
+
+    case '🚀 Собрать бота':
+      const botServicesMessage = `🤖 *Telegram боты - каталог услуг*
+
+Выберите тип бота:
+
+💼 *Бот-визитка* - $100-300
+Простой бот для презентации бизнеса
+Срок: 3 дня
+
+🛒 *Интернет-магазин* - $500-1500
+Каталог, корзина, оплата
+Срок: 14 дней
+
+📅 *Бот для записи* - $300-800
+Календарь, напоминания, CRM
+Срок: 7 дней
+
+🎓 *Образовательный бот* - $400-1000
+Курсы, тесты, сертификаты
+Срок: 10 дней
+
+🏢 *Бот для бизнеса* - $600-2000
+Интеграции, аналитика, отчёты
+Срок: 14 дней
+
+🎮 *Игра в Telegram* - $800-3000
+Интерактивная игра с механикой
+Срок: 21 день`;
+
+      await bot.sendMessage(chatId, botServicesMessage, {
+        parse_mode: 'Markdown',
+        reply_markup: telegramBotServicesKeyboard,
+      });
+      break;
+
+    case '📅 Записаться':
+      const calendarMessage = `📅 *Запись на консультацию*
+
+Выберите дату для записи:
+
+🕐 *Время работы:* ежедневно с 10:00 до 22:00
+💰 *Стоимость консультации:* $100/час
+
+*Что вы получите:*
+• Анализ вашего проекта
+• Рекомендации по реализации
+• План работ и смета
+• Ответы на все вопросы`;
+
+      const calendarKeyboard = createCalendarKeyboard(new Date());
+
+      await bot.sendMessage(chatId, calendarMessage, {
+        parse_mode: 'Markdown',
+        reply_markup: calendarKeyboard,
+      });
+      break;
+
+    case '📖 Портфолио':
+      const portfolioMessage = `📖 *Наше портфолио*
+
+Выберите категорию работ:
+
+🤖 *Telegram боты*
+• Foxampy Bot Builder
+• Civilization Protocol Bot
+• Shop Assistant Bot
+
+📱 *Мобильные приложения*
+• Dogymorbios (iOS/Android)
+• Fitness Tracker App
+
+🌐 *Веб-сайты*
+• Foxampy Portfolio
+• Civilization Protocol
+• EthoLife Platform
+
+⚙️ *CRM системы*
+• Sales CRM
+• Project Management System`;
+
+      await bot.sendMessage(chatId, portfolioMessage, {
+        parse_mode: 'Markdown',
+        reply_markup: portfolioKeyboard,
+      });
+      break;
+
+    case '👤 Мой аккаунт':
+      const dbUser = await UserModel.findById(user.id);
+      if (dbUser) {
+        const orders = await OrderModel.findByUser(user.id);
+        const appointments = await AppointmentModel.findByUser(user.id);
+
+        const accountMessage = `👤 *Ваш аккаунт*
+
+📋 *Информация:*
+• ID: \`${user.id}\`
+• Username: ${user.username ? `@${user.username}` : 'нет'}
+• Имя: ${user.first_name || ''}
+
+📊 *Статистика:*
+• Заказов: ${orders.length}
+• Записей: ${appointments.length}
+
+📅 *Дата регистрации:* ${new Date(dbUser.created_at).toLocaleDateString('ru-RU')}`;
+
+        await bot.sendMessage(chatId, accountMessage, {
+          parse_mode: 'Markdown',
+          reply_markup: accountKeyboard,
+        });
+      }
+      break;
+
     case '🎨 Конструктор (App)':
-      // Открываем Mini App
-      await bot.sendMessage(chatId, '🎨 *Открываем конструктор...*\n\nЗагрузка Mini App...', {
+      const { miniApp } = config;
+      await bot.sendMessage(chatId, '🎨 *Открываем конструктор...*\n\nЗагрузка Mini App с воронкой продаж...', {
         parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [[
@@ -35,96 +170,6 @@ export async function handleTextMessage(bot: TelegramBot, msg: TelegramBot.Messa
       });
       break;
 
-    case '🚀 Собрать бота':
-      await bot.sendMessage(chatId, '🛠 *Конструктор ботов*\n\n*Выберите функции для вашего бота:*\n\n💰 *Базовая стоимость:* $0/мес (Free тариф)\n\nДобавляйте функции и стоимость обновится:', {
-        parse_mode: 'Markdown',
-        reply_markup: botBuilderKeyboard,
-      });
-      break;
-
-    case '📊 Мои проекты':
-      const projects = await get_user_projects(user.id);
-      if (projects.length === 0) {
-        await bot.sendMessage(chatId, '📭 *У вас пока нет проектов*\n\nСоздайте своего первого бота!', {
-          parse_mode: 'Markdown',
-          reply_markup: mainMenuKeyboard,
-        });
-      } else {
-        const projectsList = projects.map((p: any, i: number) => 
-          `${i + 1}. *${p.name}* - ${p.status}`
-        ).join('\n');
-        
-        await bot.sendMessage(chatId, `📁 *Ваши проекты*\n\n${projectsList}`, {
-          parse_mode: 'Markdown',
-          reply_markup: mainMenuKeyboard,
-        });
-      }
-      break;
-
-    case '📚 Каталог функций':
-      const catalogMessage = `📚 *Каталог функций*\n\n*Доступные модули для вашего бота:*\n\n` +
-        `📝 *Сбор заявок* - $5/мес\nСбор контактных данных и заявок\n\n` +
-        `💬 *Автоответы (FAQ)* - $5/мес\nАвтоматические ответы на вопросы\n\n` +
-        `📅 *Запись клиентов* - $7/мес\nОнлайн-запись на услуги\n\n` +
-        `📊 *Google Sheets* - $3/мес\nСохранение в таблицы\n\n` +
-        `🔔 *Уведомления* - $3/мес\nМгновенные уведомления\n\n` +
-        `💳 *Приём оплаты* - $10/мес\nПлатежи через Telegram/Stripe`;
-      
-      await bot.sendMessage(chatId, catalogMessage, {
-        parse_mode: 'Markdown',
-        reply_markup: mainMenuKeyboard,
-      });
-      break;
-
-    case '💰 Тарифы':
-      const pricingMessage = `💰 *Тарифные планы*\n\n` +
-        `🆓 *Free* - $0/мес\n• 1 бот\n• 2 функции\n• 100 лидов/мес\n\n` +
-        `⭐ *Basic* - $10/мес\n• 3 бота\n• 5 функций\n• 1000 лидов/мес\n\n` +
-        `🚀 *Pro* - $25/мес\n• ∞ ботов\n• ∞ функций\n• ∞ лидов\n\n` +
-        `🔧 *Настройка под ключ* - $50 (единоразово)`;
-      
-      await bot.sendMessage(chatId, pricingMessage, {
-        parse_mode: 'Markdown',
-        reply_markup: pricingKeyboard,
-      });
-      break;
-
-    case '📖 Помощь':
-      const helpMessage = `❓ *Помощь и поддержка*\n\n` +
-        `📚 *Как это работает:*\n\n` +
-        `1️⃣ Нажмите "🚀 Собрать бота"\n` +
-        `2️⃣ Выберите нужные функции\n` +
-        `3️⃣ Настройте параметры\n` +
-        `4️⃣ Оплатите подписку\n` +
-        `5️⃣ Пользуйтесь готовым ботом!\n\n` +
-        `💬 *Нужна помощь?*\n` +
-        `Напишите в поддержку: @your_support`;
-      
-      await bot.sendMessage(chatId, helpMessage, {
-        parse_mode: 'Markdown',
-        reply_markup: mainMenuKeyboard,
-      });
-      break;
-
-    case '👤 Профиль':
-      const dbUser = await UserModel.findById(user.id);
-      if (dbUser) {
-        const profileMessage = `👤 *Ваш профиль*\n\n` +
-          `📋 *Информация:*\n` +
-          `• ID: \`${user.id}\`\n` +
-          `• Username: ${user.username ? `@${user.username}` : 'нет'}\n` +
-          `• Имя: ${user.first_name || ''}\n` +
-          `• Язык: ${dbUser.language_code}\n\n` +
-          `📅 *Дата регистрации:* ${new Date(dbUser.created_at).toLocaleDateString('ru-RU')}\n` +
-          `🕐 *Последний вход:* ${new Date(dbUser.last_seen).toLocaleString('ru-RU')}`;
-        
-        await bot.sendMessage(chatId, profileMessage, {
-          parse_mode: 'Markdown',
-          reply_markup: mainMenuKeyboard,
-        });
-      }
-      break;
-
     default:
       // Неизвестная команда - показываем главное меню
       await bot.sendMessage(chatId, '🏠 *Главное меню*\n\nВыберите действие:', {
@@ -132,10 +177,4 @@ export async function handleTextMessage(bot: TelegramBot, msg: TelegramBot.Messa
         reply_markup: mainMenuKeyboard,
       });
   }
-}
-
-// Получение проектов пользователя (заглушка)
-async function get_user_projects(userId: number) {
-  // Здесь будет запрос к БД
-  return [];
 }

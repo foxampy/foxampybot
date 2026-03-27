@@ -1,11 +1,25 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Rocket, Layers, DollarSign, BarChart3, Settings, User, Zap } from 'lucide-react';
+import { Rocket, BarChart3, Settings, User, Briefcase, Calendar, CheckCircle } from 'lucide-react';
 import './styles/global.css';
 
 // ============================================
 // ТИПЫ ДАННЫХ
 // ============================================
+interface Service {
+  id: string;
+  name: string;
+  nameEn: string;
+  category: 'bot' | 'app' | 'website' | 'crm';
+  priceFrom: number;
+  priceTo: number;
+  durationDays: number;
+  description: string;
+  descriptionEn: string;
+  icon: string;
+  features: string[];
+}
+
 interface Feature {
   id: string;
   name: string;
@@ -16,101 +30,120 @@ interface Feature {
   icon: string;
 }
 
-interface BotProject {
-  id: string;
-  name: string;
-  features: string[];
-  totalPrice: number;
-  status: 'draft' | 'active' | 'paused';
-}
-
 // ============================================
-// ДАННЫЕ
+// ДАННЫЕ - УСЛУГИ
 // ============================================
-const features: Feature[] = [
+const services: Service[] = [
   {
-    id: 'lead_capture',
-    name: 'Сбор заявок',
-    nameEn: 'Lead Capture',
-    price: 5,
-    description: 'Сбор контактных данных и заявок от клиентов 24/7',
-    descriptionEn: 'Collect customer data and leads 24/7',
-    icon: '📝',
+    id: 'telegram_bot',
+    name: 'Telegram бот',
+    nameEn: 'Telegram Bot',
+    category: 'bot',
+    priceFrom: 100,
+    priceTo: 1500,
+    durationDays: 7,
+    description: 'Бот для бизнеса, продаж или автоматизации',
+    descriptionEn: 'Bot for business, sales or automation',
+    icon: '🤖',
+    features: ['Автоматизация', '24/7 работа', 'Интеграции', 'Админ-панель'],
   },
   {
-    id: 'faq',
-    name: 'Автоответы',
-    nameEn: 'Auto Answers',
-    price: 5,
-    description: 'Автоматические ответы на частые вопросы',
-    descriptionEn: 'Automatic answers to FAQs',
-    icon: '💬',
+    id: 'mobile_app',
+    name: 'Мобильное приложение',
+    nameEn: 'Mobile App',
+    category: 'app',
+    priceFrom: 2000,
+    priceTo: 10000,
+    durationDays: 45,
+    description: 'iOS и Android приложение для вашего бизнеса',
+    descriptionEn: 'iOS and Android app for your business',
+    icon: '📱',
+    features: ['iOS + Android', 'Дизайн', 'Backend', 'Публикация'],
   },
   {
-    id: 'booking',
-    name: 'Запись клиентов',
-    nameEn: 'Booking System',
-    price: 7,
-    description: 'Онлайн-запись на услуги и встречи',
-    descriptionEn: 'Online booking for services',
-    icon: '📅',
+    id: 'website',
+    name: 'Веб-сайт',
+    nameEn: 'Website',
+    category: 'website',
+    priceFrom: 300,
+    priceTo: 5000,
+    durationDays: 14,
+    description: 'Лендинг или корпоративный сайт',
+    descriptionEn: 'Landing page or corporate website',
+    icon: '🌐',
+    features: ['Адаптивный дизайн', 'SEO', 'CMS', 'Формы заявок'],
   },
   {
-    id: 'google_sheets',
-    name: 'Google Sheets',
-    nameEn: 'Google Sheets',
-    price: 3,
-    description: 'Сохранение данных в Google Таблицы',
-    descriptionEn: 'Save data to Google Sheets',
-    icon: '📊',
-  },
-  {
-    id: 'notifications',
-    name: 'Уведомления',
-    nameEn: 'Notifications',
-    price: 3,
-    description: 'Мгновенные уведомления владельцу',
-    descriptionEn: 'Instant notifications to owner',
-    icon: '🔔',
-  },
-  {
-    id: 'payments',
-    name: 'Приём оплаты',
-    nameEn: 'Payments',
-    price: 10,
-    description: 'Приём платежей через Telegram/Stripe',
-    descriptionEn: 'Accept payments via Telegram/Stripe',
-    icon: '💳',
+    id: 'crm',
+    name: 'CRM система',
+    nameEn: 'CRM System',
+    category: 'crm',
+    priceFrom: 1500,
+    priceTo: 8000,
+    durationDays: 30,
+    description: 'Система управления клиентами и продажами',
+    descriptionEn: 'Customer and sales management system',
+    icon: '⚙️',
+    features: ['Учёт клиентов', 'Воронки', 'Отчёты', 'Интеграции'],
   },
 ];
 
-const tiers = [
-  {
-    id: 'free',
-    name: 'Free',
-    price: 0,
-    features: ['1 бот', '2 функции', '100 лидов/мес', 'Базовая поддержка'],
-    highlighted: false,
-  },
-  {
-    id: 'basic',
-    name: 'Basic',
-    price: 10,
-    features: ['3 бота', '5 функций', '1000 лидов/мес', 'Приоритетная поддержка', 'Google Sheets'],
-    highlighted: true,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    price: 25,
-    features: ['∞ ботов', '∞ функций', '∞ лидов', 'VIP поддержка', 'Все интеграции', 'API доступ'],
-    highlighted: false,
-  },
+// ============================================
+// ДАННЫЕ - ФУНКЦИИ ДЛЯ БОТОВ
+// ============================================
+const features: Feature[] = [
+  { id: 'lead_capture', name: 'Сбор заявок', nameEn: 'Lead Capture', price: 5, description: 'Сбор заявок 24/7', descriptionEn: 'Collect leads 24/7', icon: '📝' },
+  { id: 'faq', name: 'Автоответы', nameEn: 'Auto Answers', price: 5, description: 'Ответы на вопросы', descriptionEn: 'FAQ answers', icon: '💬' },
+  { id: 'booking', name: 'Запись клиентов', nameEn: 'Booking', price: 7, description: 'Онлайн-запись', descriptionEn: 'Online booking', icon: '📅' },
+  { id: 'google_sheets', name: 'Google Sheets', nameEn: 'Google Sheets', price: 3, description: 'Сохранение в таблицы', descriptionEn: 'Save to sheets', icon: '📊' },
+  { id: 'notifications', name: 'Уведомления', nameEn: 'Notifications', price: 3, description: 'Мгновенные уведомления', descriptionEn: 'Instant notifications', icon: '🔔' },
+  { id: 'payments', name: 'Приём оплаты', nameEn: 'Payments', price: 10, description: 'Платежи в Telegram', descriptionEn: 'Telegram payments', icon: '💳' },
 ];
 
 // ============================================
 // КОМПОНЕНТЫ
 // ============================================
+
+// Карточка услуги
+function ServiceCard({ service, onSelect }: { service: Service; onSelect: (s: Service) => void }) {
+  const isRussian = true;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
+      onClick={() => onSelect(service)}
+      className="card cursor-pointer"
+    >
+      <div className="flex items-start justify-between mb-3">
+        <span className="text-4xl">{service.icon}</span>
+        <div className="badge badge-accent">
+          ${service.priceFrom}-${service.priceTo}
+        </div>
+      </div>
+      
+      <h3 className="text-lg font-mono text-white mb-2">
+        {isRussian ? service.name : service.nameEn}
+      </h3>
+      <p className="text-sm text-secondary mb-3">
+        {isRussian ? service.description : service.descriptionEn}
+      </p>
+      
+      <div className="flex flex-wrap gap-2 mb-3">
+        {service.features.slice(0, 3).map((f, i) => (
+          <span key={i} className="text-[10px] font-mono text-accent border border-accent/30 px-2 py-1 rounded">
+            {f}
+          </span>
+        ))}
+      </div>
+      
+      <div className="text-xs text-muted font-mono">
+        ⏱️ {service.durationDays} {isRussian ? 'дней' : 'days'}
+      </div>
+    </motion.div>
+  );
+}
 
 // Карточка функции
 function FeatureCard({ 
@@ -149,7 +182,7 @@ function FeatureCard({
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="absolute top-3 right-3 w-6 h-6 bg-accent rounded-full flex items-center justify-center"
+          className="absolute top-3 right-3 w-6 h-6 bg-accent rounded-full flex items-center justify-center text-black font-bold"
         >
           ✓
         </motion.div>
@@ -158,70 +191,241 @@ function FeatureCard({
   );
 }
 
-// Карточка тарифа
-function TierCard({ 
-  tier, 
-  selected, 
-  onSelect 
-}: { 
-  tier: typeof tiers[0]; 
-  selected: boolean; 
-  onSelect: (id: string) => void;
-}) {
+// Экран онбординга (воронка)
+function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
+  const [step, setStep] = useState(0);
+  
+  const steps = [
+    {
+      title: '👋 Привет!',
+      subtitle: 'Добро пожаловать в Foxampy',
+      description: 'Создаем цифровые решения для бизнеса с 2020 года',
+      icon: '🚀',
+    },
+    {
+      title: '🎯 Что мы предлагаем?',
+      subtitle: 'Полный цикл разработки',
+      description: 'От идеи до запуска и поддержки',
+      icon: '💼',
+    },
+    {
+      title: '📊 Наш опыт',
+      subtitle: '50+ успешных проектов',
+      description: 'Боты, приложения, сайты, CRM для бизнеса',
+      icon: '⭐',
+    },
+    {
+      title: '🎉 Готовы начать?',
+      subtitle: 'Выберите услугу',
+      description: 'Или запишитесь на бесплатную консультацию',
+      icon: '✅',
+    },
+  ];
+  
+  const handleNext = () => {
+    if (step < steps.length - 1) {
+      setStep(step + 1);
+    } else {
+      onComplete();
+    }
+  };
+  
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.02 }}
-      onClick={() => onSelect(tier.id)}
-      className={`card cursor-pointer ${tier.highlighted ? 'border-accent' : ''} ${selected ? 'selected' : ''}`}
-      style={{
-        borderColor: selected ? 'var(--color-accent)' : (tier.highlighted ? 'var(--color-accent)' : undefined),
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="space-y-6"
     >
-      {tier.highlighted && (
-        <div className="badge badge-accent mb-3">Популярный</div>
-      )}
-      
-      <h3 className="text-2xl font-mono text-white mb-2">{tier.name}</h3>
-      <div className="text-3xl font-bold text-accent mb-4">
-        ${tier.price}<span className="text-sm text-secondary">/мес</span>
+      <div className="text-center py-12">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200 }}
+          className="text-8xl mb-6"
+        >
+          {steps[step].icon}
+        </motion.div>
+        
+        <h2 className="text-2xl font-mono text-white mb-2">
+          {steps[step].title}
+        </h2>
+        <h3 className="text-lg text-accent mb-4">
+          {steps[step].subtitle}
+        </h3>
+        <p className="text-secondary">
+          {steps[step].description}
+        </p>
       </div>
       
-      <ul className="space-y-2 mb-6">
-        {tier.features.map((feature, i) => (
-          <li key={i} className="text-sm text-secondary flex items-center gap-2">
-            <span className="text-accent">✓</span> {feature}
-          </li>
-        ))}
-      </ul>
+      {/* Прогресс */}
+      <div className="progress-bar mb-6">
+        <div 
+          className="progress-bar-fill" 
+          style={{ width: `${((step + 1) / steps.length) * 100}%` }}
+        />
+      </div>
       
-      <button
-        className={`btn btn-block ${selected ? 'btn-primary' : ''}`}
-      >
-        {selected ? 'Выбрано' : 'Выбрать'}
-      </button>
+      {/* Кнопки */}
+      <div className="space-y-3">
+        <button onClick={handleNext} className="btn btn-primary btn-block">
+          {step < steps.length - 1 ? 'Далее →' : 'Начать →'}
+        </button>
+        
+        {step > 0 && (
+          <button onClick={() => setStep(step - 1)} className="btn btn-block">
+            ← Назад
+          </button>
+        )}
+      </div>
     </motion.div>
   );
 }
 
-// Прогресс сборки
-function BuilderProgress({ step, total }: { step: number; total: number }) {
-  const percentage = (step / total) * 100;
+// Экран услуг
+function ServicesScreen({ onSelectService }: { onSelectService: (s: Service) => void }) {
+  const [filter, setFilter] = useState<'all' | 'bot' | 'app' | 'website' | 'crm'>('all');
+  
+  const filteredServices = filter === 'all' 
+    ? services 
+    : services.filter(s => s.category === filter);
   
   return (
-    <div className="mb-6">
-      <div className="flex justify-between text-sm mb-2">
-        <span className="text-mono text-muted">Прогресс сборки</span>
-        <span className="text-mono text-accent">{Math.round(percentage)}%</span>
+    <div className="space-y-6">
+      {/* Фильтры */}
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        {[
+          { id: 'all', label: 'Все', icon: '📋' },
+          { id: 'bot', label: 'Боты', icon: '🤖' },
+          { id: 'app', label: 'Приложения', icon: '📱' },
+          { id: 'website', label: 'Сайты', icon: '🌐' },
+          { id: 'crm', label: 'CRM', icon: '⚙️' },
+        ].map(item => (
+          <button
+            key={item.id}
+            onClick={() => setFilter(item.id as any)}
+            className={`btn whitespace-nowrap ${filter === item.id ? 'btn-primary' : ''}`}
+          >
+            {item.icon} {item.label}
+          </button>
+        ))}
       </div>
-      <div className="progress-bar">
-        <div 
-          className="progress-bar-fill" 
-          style={{ width: `${percentage}%` }}
-        />
+      
+      {/* Сетка услуг */}
+      <div className="grid md:grid-cols-2 gap-4">
+        {filteredServices.map(service => (
+          <ServiceCard
+            key={service.id}
+            service={service}
+            onSelect={onSelectService}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Экран конструктора ботов
+function BotBuilderScreen() {
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  
+  const toggleFeature = (id: string) => {
+    setSelectedFeatures(prev =>
+      prev.includes(id) ? prev.filter(fid => fid !== id) : [...prev, id]
+    );
+  };
+  
+  const totalPrice = selectedFeatures.reduce((sum, id) => {
+    const f = features.find(feat => feat.id === id);
+    return sum + (f?.price || 0);
+  }, 0);
+  
+  return (
+    <div className="space-y-6">
+      <div className="card">
+        <h3 className="text-lg font-mono text-white mb-4">🛠 Конструктор бота</h3>
+        <p className="text-sm text-secondary mb-4">
+          Выберите функции для вашего бота. Базовая версия бесплатна!
+        </p>
+        
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          {features.map(feature => (
+            <FeatureCard
+              key={feature.id}
+              feature={feature}
+              selected={selectedFeatures.includes(feature.id)}
+              onToggle={toggleFeature}
+            />
+          ))}
+        </div>
+        
+        <div className="flex justify-between items-center pt-4 border-t border-white/10">
+          <span className="text-mono text-muted">Итого:</span>
+          <span className="text-2xl font-mono text-accent">${totalPrice}/мес</span>
+        </div>
+      </div>
+      
+      <button className="btn btn-primary btn-block">
+        <CheckCircle size={18} />
+        Оформить заказ
+      </button>
+    </div>
+  );
+}
+
+// Экран аккаунта
+function AccountScreen() {
+  const tg = (window as any).TelegramWebApp;
+  const user = tg?.initDataUnsafe?.user;
+  
+  return (
+    <div className="space-y-6">
+      {/* Профиль */}
+      <div className="card text-center">
+        <div className="w-20 h-20 rounded-full bg-accent/20 mx-auto mb-4 flex items-center justify-center text-3xl">
+          {user?.first_name?.[0] || '👤'}
+        </div>
+        
+        <h3 className="text-xl font-mono text-white mb-1">
+          {user ? `${user.first_name || ''} ${user.last_name || ''}` : 'Гость'}
+        </h3>
+        <p className="text-secondary text-sm mb-4">
+          {user?.username ? `@${user.username}` : 'Нет username'}
+        </p>
+        
+        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
+          <div>
+            <div className="text-2xl font-mono text-accent">0</div>
+            <div className="text-[10px] text-muted">Заказов</div>
+          </div>
+          <div>
+            <div className="text-2xl font-mono text-accent">0</div>
+            <div className="text-[10px] text-muted">Записей</div>
+          </div>
+          <div>
+            <div className="text-2xl font-mono text-accent">$0</div>
+            <div className="text-[10px] text-muted">Потрачено</div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Меню аккаунта */}
+      <div className="space-y-2">
+        <button className="btn btn-block justify-start">
+          <BarChart3 size={18} />
+          Моя статистика
+        </button>
+        <button className="btn btn-block justify-start">
+          <Briefcase size={18} />
+          Мои заказы
+        </button>
+        <button className="btn btn-block justify-start">
+          <Calendar size={18} />
+          Мои записи
+        </button>
+        <button className="btn btn-block justify-start">
+          <Settings size={18} />
+          Настройки
+        </button>
       </div>
     </div>
   );
@@ -231,9 +435,7 @@ function BuilderProgress({ step, total }: { step: number; total: number }) {
 // ГЛАВНЫЙ КОМПОНЕНТ
 // ============================================
 function App() {
-  const [currentScreen, setCurrentScreen] = useState<'dashboard' | 'builder' | 'pricing' | 'settings'>('dashboard');
-  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
-  const [selectedTier, setSelectedTier] = useState<string>('free');
+  const [currentScreen, setCurrentScreen] = useState<'onboarding' | 'services' | 'builder' | 'account' | 'booking'>('onboarding');
   const [language, setLanguage] = useState<'ru' | 'en'>('ru');
   
   // Telegram WebApp инициализация
@@ -243,32 +445,30 @@ function App() {
       tg.ready();
       tg.expand();
       
-      // Применяем тему Telegram
       if (tg.colorScheme === 'light') {
         document.documentElement.classList.add('theme-light');
       }
       
-      // Инициализируем пользователя
       const user = tg.initDataUnsafe?.user;
       console.log('Telegram user:', user);
     }
   }, []);
   
-  const toggleFeature = (featureId: string) => {
-    setSelectedFeatures(prev => 
-      prev.includes(featureId)
-        ? prev.filter(id => id !== featureId)
-        : [...prev, featureId]
-    );
+  const handleSelectService = (service: Service) => {
+    // Можно открыть детали услуги или форму заказа
+    alert(`Выбрана услуга: ${service.name}\nЦена: $${service.priceFrom}-${service.priceTo}\nСрок: ${service.durationDays} дней`);
   };
   
-  const totalPrice = selectedFeatures.reduce((sum, id) => {
-    const feature = features.find(f => f.id === id);
-    return sum + (feature?.price || 0);
-  }, 0);
-  
   const isRussian = language !== 'en';
-
+  
+  // Навигация
+  const navItems = [
+    { id: 'services', label: isRussian ? 'Услуги' : 'Services', icon: Briefcase },
+    { id: 'builder', label: isRussian ? 'Конструктор' : 'Builder', icon: Rocket },
+    { id: 'booking', label: isRussian ? 'Запись' : 'Booking', icon: Calendar },
+    { id: 'account', label: isRussian ? 'Аккаунт' : 'Account', icon: User },
+  ];
+  
   return (
     <div className="relative min-h-screen">
       {/* Фон */}
@@ -284,10 +484,10 @@ function App() {
         >
           <div>
             <h1 className="text-2xl md:text-3xl font-mono text-white">
-              🤖 Bot Builder
+              🚀 Foxampy
             </h1>
             <p className="text-sm text-secondary">
-              {isRussian ? 'Создайте своего бота за 5 минут' : 'Build your bot in 5 minutes'}
+              {isRussian ? 'Цифровые решения' : 'Digital Solutions'}
             </p>
           </div>
           
@@ -298,235 +498,51 @@ function App() {
             {isRussian ? 'EN' : 'RU'}
           </button>
         </motion.header>
-
-        {/* Dashboard */}
-        {currentScreen === 'dashboard' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="space-y-6"
-          >
-            {/* Stats Widgets */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="card">
-                <div className="flex items-center gap-3 mb-2">
-                  <Rocket size={20} className="text-accent" />
-                  <span className="text-sm text-muted">Боты</span>
-                </div>
-                <div className="text-2xl font-mono text-white">0</div>
-              </div>
-              
-              <div className="card">
-                <div className="flex items-center gap-3 mb-2">
-                  <Zap size={20} className="text-accent" />
-                  <span className="text-sm text-muted">Лиды</span>
-                </div>
-                <div className="text-2xl font-mono text-white">0</div>
-              </div>
-              
-              <div className="card">
-                <div className="flex items-center gap-3 mb-2">
-                  <BarChart3 size={20} className="text-accent" />
-                  <span className="text-sm text-muted">Конверсия</span>
-                </div>
-                <div className="text-2xl font-mono text-white">0%</div>
-              </div>
-              
-              <div className="card">
-                <div className="flex items-center gap-3 mb-2">
-                  <DollarSign size={20} className="text-accent" />
-                  <span className="text-sm text-muted">Доход</span>
-                </div>
-                <div className="text-2xl font-mono text-white">$0</div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="card">
-              <h2 className="text-lg font-mono text-white mb-4">
-                {isRussian ? 'Быстрые действия' : 'Quick Actions'}
-              </h2>
-              
-              <div className="space-y-3">
-                <button
-                  onClick={() => setCurrentScreen('builder')}
-                  className="btn btn-primary btn-block"
-                >
-                  <Rocket size={18} />
-                  {isRussian ? '🚀 Собрать бота' : '🚀 Build Bot'}
-                </button>
-                
-                <button
-                  onClick={() => setCurrentScreen('pricing')}
-                  className="btn btn-block"
-                >
-                  <DollarSign size={18} />
-                  {isRussian ? '💰 Тарифы' : '💰 Pricing'}
-                </button>
-              </div>
-            </div>
-          </motion.div>
+        
+        {/* Экраны */}
+        {currentScreen === 'onboarding' && (
+          <OnboardingScreen onComplete={() => setCurrentScreen('services')} />
         )}
-
-        {/* Builder */}
-        {currentScreen === 'builder' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <BuilderProgress step={selectedFeatures.length} total={features.length} />
-            
-            <h2 className="text-xl font-mono text-white mb-4">
-              {isRussian ? 'Выберите функции' : 'Select Features'}
-            </h2>
-            
-            <div className="grid md:grid-cols-2 gap-4 mb-6">
-              {features.map(feature => (
-                <FeatureCard
-                  key={feature.id}
-                  feature={feature}
-                  selected={selectedFeatures.includes(feature.id)}
-                  onToggle={toggleFeature}
-                />
-              ))}
-            </div>
-            
-            <div className="card mb-4">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-mono text-muted">
-                  {isRussian ? 'Итого:' : 'Total:'}
-                </span>
-                <span className="text-2xl font-mono text-accent">
-                  ${totalPrice}/мес
-                </span>
-              </div>
-              
-              <div className="space-y-3">
-                <button
-                  onClick={() => setCurrentScreen('pricing')}
-                  className="btn btn-primary btn-block"
-                >
-                  {isRussian ? 'Выбрать тариф' : 'Choose Tier'}
-                </button>
-                
-                <button
-                  onClick={() => setCurrentScreen('dashboard')}
-                  className="btn btn-block"
-                >
-                  {isRussian ? 'Назад' : 'Back'}
-                </button>
-              </div>
-            </div>
-          </motion.div>
+        
+        {currentScreen === 'services' && (
+          <ServicesScreen onSelectService={handleSelectService} />
         )}
-
-        {/* Pricing */}
-        {currentScreen === 'pricing' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <h2 className="text-xl font-mono text-white mb-6">
-              {isRussian ? 'Выберите тариф' : 'Choose Your Plan'}
-            </h2>
-            
-            <div className="grid md:grid-cols-3 gap-4 mb-6">
-              {tiers.map(tier => (
-                <TierCard
-                  key={tier.id}
-                  tier={tier}
-                  selected={selectedTier === tier.id}
-                  onSelect={setSelectedTier}
-                />
-              ))}
-            </div>
-            
-            <div className="card">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-mono text-muted">
-                  {isRussian ? 'Функции:' : 'Features:'}
-                </span>
-                <span className="text-mono text-accent">
-                  {selectedFeatures.length}
-                </span>
-              </div>
-              
-              <div className="space-y-3">
-                <button className="btn btn-primary btn-block">
-                  {isRussian ? '💳 Оплатить' : '💳 Pay Now'}
-                </button>
-                
-                <button
-                  onClick={() => setCurrentScreen('builder')}
-                  className="btn btn-block"
-                >
-                  {isRussian ? 'Назад' : 'Back'}
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Settings */}
-        {currentScreen === 'settings' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <div className="card">
-              <h2 className="text-xl font-mono text-white mb-4">
-                {isRussian ? 'Настройки' : 'Settings'}
-              </h2>
-              <p className="text-secondary">
-                {isRussian ? 'В разработке...' : 'Coming soon...'}
-              </p>
-            </div>
-          </motion.div>
+        
+        {currentScreen === 'builder' && <BotBuilderScreen />}
+        
+        {currentScreen === 'account' && <AccountScreen />}
+        
+        {currentScreen === 'booking' && (
+          <div className="text-center py-12">
+            <Calendar size={48} className="mx-auto mb-4 text-accent" />
+            <h2 className="text-xl font-mono text-white mb-2">📅 Запись на консультацию</h2>
+            <p className="text-secondary mb-6">
+              Выберите дату и время для бесплатной консультации
+            </p>
+            <button className="btn btn-primary">
+              Открыть календарь
+            </button>
+          </div>
         )}
       </main>
-
+      
       {/* Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)] backdrop-blur-md">
+      <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-black/80 backdrop-blur-md">
         <div className="flex items-center justify-around py-3">
-          <button
-            onClick={() => setCurrentScreen('dashboard')}
-            className={`flex flex-col items-center gap-1 ${currentScreen === 'dashboard' ? 'text-accent' : 'text-muted'}`}
-          >
-            <BarChart3 size={20} />
-            <span className="text-[10px] font-mono">
-              {isRussian ? 'Главная' : 'Home'}
-            </span>
-          </button>
-          
-          <button
-            onClick={() => setCurrentScreen('builder')}
-            className={`flex flex-col items-center gap-1 ${currentScreen === 'builder' ? 'text-accent' : 'text-muted'}`}
-          >
-            <Layers size={20} />
-            <span className="text-[10px] font-mono">
-              {isRussian ? 'Конструктор' : 'Builder'}
-            </span>
-          </button>
-          
-          <button
-            onClick={() => setCurrentScreen('pricing')}
-            className={`flex flex-col items-center gap-1 ${currentScreen === 'pricing' ? 'text-accent' : 'text-muted'}`}
-          >
-            <DollarSign size={20} />
-            <span className="text-[10px] font-mono">
-              {isRussian ? 'Тарифы' : 'Pricing'}
-            </span>
-          </button>
-          
-          <button
-            onClick={() => setCurrentScreen('settings')}
-            className={`flex flex-col items-center gap-1 ${currentScreen === 'settings' ? 'text-accent' : 'text-muted'}`}
-          >
-            <Settings size={20} />
-            <span className="text-[10px] font-mono">
-              {isRussian ? 'Настройки' : 'Settings'}
-            </span>
-          </button>
+          {navItems.map(item => (
+            <button
+              key={item.id}
+              onClick={() => setCurrentScreen(item.id as any)}
+              className={`flex flex-col items-center gap-1 ${
+                currentScreen === item.id ? 'text-accent' : 'text-muted'
+              }`}
+            >
+              <item.icon size={20} />
+              <span className="text-[10px] font-mono">
+                {item.label}
+              </span>
+            </button>
+          ))}
         </div>
       </nav>
     </div>
