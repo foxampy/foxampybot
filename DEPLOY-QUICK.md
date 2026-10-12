@@ -40,7 +40,7 @@ vercel --prod
 ### 5️⃣ Настройте переменные в Vercel
 
 ```bash
-vercel env add BOT_TOKEN 8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+vercel env add BOT_TOKEN <TELEGRAM_BOT_TOKEN>
 vercel env add ADMIN_ID 268494758
 vercel env add DATABASE_URL "ваш_connection_string_от_Neon"
 vercel env add SERVER_URL https://your-project.vercel.app
@@ -59,7 +59,7 @@ npm run setup:vercel-webhook
 
 Или вручную через curl:
 ```bash
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://YOUR_URL.vercel.app/webhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://YOUR_URL.vercel.app/webhook"
 ```
 
 ### 7️⃣ Настройте Mini App в боте
@@ -83,7 +83,7 @@ curl https://YOUR_URL.vercel.app/health
 
 ### Webhook настроен?
 ```bash
-curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
 ```
 
 Ответ: `"ok": true`
@@ -149,11 +149,11 @@ vercel logs --prod
 
 ### Проверка webhook:
 ```bash
-curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
 ```
 
 ### Пересоздать webhook:
 ```bash
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/deleteWebhook"
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://YOUR_URL.vercel.app/webhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/deleteWebhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://YOUR_URL.vercel.app/webhook"
 ```

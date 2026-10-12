@@ -76,7 +76,7 @@ npm install
 Скопируйте `.env.example` в `.env` и заполните:
 
 ```env
-BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 ADMIN_ID=268494758
 
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/telegram_bot_builder

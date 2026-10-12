@@ -6,7 +6,7 @@ import { setWebhook, getWebhookInfo } from '../lib/bot/webhook';
 
 dotenv.config({ path: '.env.local' });
 
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
+const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const WEBHOOK_URL = process.env.TELEGRAM_WEBHOOK_URL || process.env.VERCEL_URL 
   ? `https://${process.env.VERCEL_URL}/api/telegram/webhook`
   : undefined;

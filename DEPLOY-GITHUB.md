@@ -36,7 +36,7 @@
 В Vercel Dashboard → Settings → Environment Variables:
 
 ```
-BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 ADMIN_ID=268494758
 DATABASE_URL=postgresql://... (ваш от Neon)
 SERVER_URL=https://foxampybot.vercel.app
@@ -47,7 +47,7 @@ NODE_ENV=production
 **Или через CLI:**
 ```bash
 cd foxampybot
-vercel env add BOT_TOKEN 8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+vercel env add BOT_TOKEN <TELEGRAM_BOT_TOKEN>
 vercel env add ADMIN_ID 268494758
 vercel env add DATABASE_URL "ваш_connection_string_от_Neon"
 ```
@@ -78,12 +78,12 @@ npm run db:migrate
 После деплоя узнайте ваш URL (например, `https://foxampybot.vercel.app`):
 
 ```bash
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://foxampybot.vercel.app/webhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://foxampybot.vercel.app/webhook"
 ```
 
 **Проверьте:**
 ```bash
-curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
 ```
 
 Должно быть: `"ok": true`
@@ -228,13 +228,13 @@ vercel logs
 
 ### Проверка webhook:
 ```bash
-curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
 ```
 
 ### Пересоздать webhook:
 ```bash
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/deleteWebhook"
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://foxampybot.vercel.app/webhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/deleteWebhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://foxampybot.vercel.app/webhook"
 ```
 
 ### Проверка подключения к БД:

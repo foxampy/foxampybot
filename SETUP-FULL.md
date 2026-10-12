@@ -84,7 +84,7 @@
    SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
    SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
    
-   BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+   BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
    ADMIN_ID=268494758
    
    SERVER_URL=https://foxampybot.vercel.app
@@ -103,12 +103,12 @@
 
 **Выполните в терминале:**
 ```bash
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://foxampybot.vercel.app/webhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://foxampybot.vercel.app/webhook"
 ```
 
 **Проверьте:**
 ```bash
-curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
 ```
 
 Должно быть: `"ok": true`
@@ -138,7 +138,7 @@ curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
    SUPABASE_URL=https://xxxxxxxxxxxxx.supabase.co
    SUPABASE_ANON_KEY=...
    SUPABASE_SERVICE_ROLE_KEY=...
-   BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+   BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
    ADMIN_ID=268494758
    SERVER_URL=http://localhost:3000
    MINI_APP_URL=http://localhost:5173
@@ -276,7 +276,7 @@ foxampybot (GitHub)
 vercel logs --prod
 
 # Проверьте webhook
-curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
 ```
 
 ### БД не подключается:

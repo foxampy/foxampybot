@@ -74,7 +74,7 @@ vercel
 ### Через CLI:
 
 ```bash
-vercel env add BOT_TOKEN 8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+vercel env add BOT_TOKEN <TELEGRAM_BOT_TOKEN>
 vercel env add ADMIN_ID 268494758
 vercel env add DATABASE_URL "your_neon_connection_string"
 vercel env add SERVER_URL "https://your-project.vercel.app"
@@ -87,7 +87,7 @@ vercel env add MINI_APP_URL "https://your-project.vercel.app"
 2. Выберите проект
 3. Settings → Environment Variables
 4. Добавьте переменные:
-   - `BOT_TOKEN` = `8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg`
+   - `BOT_TOKEN` = `<TELEGRAM_BOT_TOKEN>`
    - `ADMIN_ID` = `268494758`
    - `DATABASE_URL` = ваш connection string от Neon
    - `SERVER_URL` = `https://your-project.vercel.app`
@@ -124,13 +124,13 @@ vercel --name
 
 ```bash
 # Замените YOUR_URL на ваш vercel.app URL
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://YOUR_URL.vercel.app/webhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://YOUR_URL.vercel.app/webhook"
 ```
 
 ### 5.3 Проверьте webhook
 
 ```bash
-curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
 ```
 
 Ответ должен быть:

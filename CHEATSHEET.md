@@ -22,7 +22,7 @@ Settings → Environment Variables
 - SUPABASE_URL
 - SUPABASE_ANON_KEY
 - SUPABASE_SERVICE_ROLE_KEY
-- BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+- BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 - ADMIN_ID=268494758
 - SERVER_URL=https://foxampybot.vercel.app
 - MINI_APP_URL=https://foxampybot.vercel.app
@@ -53,7 +53,7 @@ copy .env.example .env.local
 
 ### Webhook:
 ```bash
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://foxampybot.vercel.app/webhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://foxampybot.vercel.app/webhook"
 ```
 
 ### Mini App:
@@ -80,7 +80,7 @@ curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr
 ## 🔑 Готовые значения
 
 ```env
-BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 ADMIN_ID=268494758
 ```
 

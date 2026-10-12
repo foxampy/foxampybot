@@ -8,7 +8,11 @@
 const https = require('https');
 
 // Конфигурация
-const BOT_TOKEN = process.env.BOT_TOKEN || '8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg';
+const BOT_TOKEN = process.env.BOT_TOKEN;
+if (!BOT_TOKEN) {
+  console.error('BOT_TOKEN не задан. Укажите его в переменных окружения.');
+  process.exit(1);
+}
 const VERCEL_URL = process.env.VERCEL_URL; // Автоматически из Vercel
 
 if (!VERCEL_URL) {

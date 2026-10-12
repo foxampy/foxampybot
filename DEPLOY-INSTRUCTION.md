@@ -95,7 +95,7 @@ SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 # Telegram
-BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 ADMIN_ID=268494758
 
 # Server (будет после деплоя)
@@ -132,7 +132,7 @@ NODE_ENV=production
 Откройте терминал и выполните:
 
 ```bash
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://foxampybot.vercel.app/webhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://foxampybot.vercel.app/webhook"
 ```
 
 **Замените `foxampybot` на ваш URL если отличается!**
@@ -140,7 +140,7 @@ curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr
 #### 3.2 Проверьте webhook
 
 ```bash
-curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
 ```
 
 **Должно быть:**
@@ -225,7 +225,7 @@ curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
 
 ### Telegram (уже готовы):
 ```
-BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 ADMIN_ID=268494758
 ```
 

@@ -40,7 +40,7 @@ SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 # Telegram
-BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 ADMIN_ID=268494758
 
 # Server
@@ -54,7 +54,7 @@ NODE_ENV=production
 ### 4. Настроить Webhook
 
 ```bash
-curl -X POST "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/setWebhook?url=https://your-project.vercel.app/webhook"
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://your-project.vercel.app/webhook"
 ```
 
 ### 5. Настроить Mini App
@@ -265,7 +265,7 @@ vercel --prod
 SUPABASE_URL=...
 SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
-BOT_TOKEN=8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg
+BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 ADMIN_ID=268494758
 SERVER_URL=https://your-project.vercel.app
 MINI_APP_URL=https://your-project.vercel.app
@@ -288,7 +288,7 @@ MINI_APP_URL=https://your-project.vercel.app
 
 3. **Webhook не работает:**
    ```bash
-   curl "https://api.telegram.org/bot8769862933:AAGKIxjwY2ahRSqRol-t8SXZ8Sr5x_X-vgg/getWebhookInfo"
+   curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
    ```
 
 ### Логи:
